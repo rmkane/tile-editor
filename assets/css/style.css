@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  color: #eee;
+}
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: #222;
+}
+h1 {
+  margin: 0;
+  padding: 0;
+}
+button {
+  color: #000;
+}
+canvas {
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  border: thin solid #666;
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  border: thin solid #666;
+  padding: 0.5rem;
+  grid-row-gap: 0.5rem;
+  grid-column-gap: 1rem;
+}
+.grid-form label {
+  font-weight: bold;
+}
+.grid-form button[type="submit"] {
+  grid-column: span 2;
+  justify-self: center;
+}

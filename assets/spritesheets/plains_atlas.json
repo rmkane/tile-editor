@@ -1,0 +1,267 @@
+{
+  "tilesheet": {
+    "file": "tile_atlas.png",
+    "tileWidth": 64,
+    "tileHeight": 64,
+    "rows": 4,
+    "columns": 8
+  },
+  "tiles": [
+    {
+      "id": "tile_01",
+      "name": "",
+      "x": 0,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_02",
+      "name": "",
+      "x": 64,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_03",
+      "name": "",
+      "x": 128,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_04",
+      "name": "",
+      "x": 192,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_05",
+      "name": "",
+      "x": 256,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_06",
+      "name": "",
+      "x": 320,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_07",
+      "name": "",
+      "x": 384,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_08",
+      "name": "",
+      "x": 448,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_09",
+      "name": "",
+      "x": 0,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_10",
+      "name": "",
+      "x": 64,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_11",
+      "name": "",
+      "x": 128,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_12",
+      "name": "",
+      "x": 192,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_13",
+      "name": "",
+      "x": 256,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_14",
+      "name": "",
+      "x": 320,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_15",
+      "name": "",
+      "x": 384,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_16",
+      "name": "",
+      "x": 448,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_17",
+      "name": "",
+      "x": 0,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_18",
+      "name": "",
+      "x": 64,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_19",
+      "name": "",
+      "x": 128,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_20",
+      "name": "",
+      "x": 192,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_21",
+      "name": "",
+      "x": 256,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_22",
+      "name": "",
+      "x": 320,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_23",
+      "name": "",
+      "x": 384,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_24",
+      "name": "",
+      "x": 448,
+      "y": 128,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_25",
+      "name": "",
+      "x": 0,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_26",
+      "name": "",
+      "x": 64,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_27",
+      "name": "",
+      "x": 128,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_28",
+      "name": "",
+      "x": 192,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_29",
+      "name": "",
+      "x": 256,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_30",
+      "name": "",
+      "x": 320,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_31",
+      "name": "",
+      "x": 384,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "id": "tile_32",
+      "name": "",
+      "x": 448,
+      "y": 192,
+      "width": 64,
+      "height": 64
+    }
+  ]
+}
