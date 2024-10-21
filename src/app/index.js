@@ -40,9 +40,6 @@ levelCanvas.addEventListener("mousemove", updateMousePosition);
 levelCanvas.addEventListener("mousemove", updateMousePosition);
 levelCanvas.addEventListener("mouseleave", clearMouse);
 
-init();
-animate();
-
 function updateMousePosition(event) {
   const relativePosition = getRelativeMousePosition(event);
   const snappedPosition = getSnappedPosition(relativePosition, state);
@@ -113,3 +110,5 @@ async function updateLevel(file) {
 function updateState(value) {
   Object.assign(state, value);
 }
+
+export { animate, init }

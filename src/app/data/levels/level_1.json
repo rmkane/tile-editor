@@ -1,7 +1,7 @@
 {
   "rows": 10,
   "columns": 10,
-  "tileset": "plains_atlas",
+  "tileset": "/assets/spritesheets/plains_atlas",
   "layers": [
     {
       "name": "background",
