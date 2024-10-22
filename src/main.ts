@@ -57,28 +57,46 @@ const levelCanvas = document.querySelector<HTMLCanvasElement>(".render-level")!;
 const atlasCtx = atlasCanvas.getContext("2d")!;
 const levelCtx = levelCanvas.getContext("2d")!;
 
-const state: ApplicationState = {
-  mouse: { x: 0, y: 0 },
-};
+const state: ApplicationState = {};
 
 atlasCtx.imageSmoothingEnabled = false;
 loadAtlasForm.addEventListener("submit", updateAtlas);
-levelCanvas.addEventListener("mousemove", updateMousePosition);
-levelCanvas.addEventListener("mousemove", updateMousePosition);
-levelCanvas.addEventListener("mouseleave", clearMouse);
+
+document.addEventListener("mouseenter", setCursor);
+document.addEventListener("mouseleave", clearCursor);
+document.addEventListener("mousemove", updateMousePosition);
 
 init();
 animate();
 
+function setCursor(event: MouseEvent) {
+  if (!(event.target instanceof HTMLCanvasElement)) return;
+  const canvas: HTMLCanvasElement = event.target;
+  updateState({
+    cursor: {
+      target: canvas,
+      position: { x: 0, y: 0 },
+    },
+  });
+}
+
+function clearCursor(event: MouseEvent) {
+  if (!(event.target instanceof HTMLCanvasElement)) return;
+  updateState({ cursor: null });
+}
+
 function updateMousePosition(event: MouseEvent) {
+  if (!(event.target instanceof HTMLCanvasElement)) return;
+  const canvas: HTMLCanvasElement = event.target;
   const relativePosition = getRelativeMousePosition(event);
   const snappedPosition = getSnappedPosition(relativePosition, state);
 
-  updateState({ mouse: snappedPosition });
-}
-
-function clearMouse(_event: MouseEvent) {
-  updateState({ mouse: null });
+  updateState({
+    cursor: {
+      target: canvas,
+      position: snappedPosition,
+    },
+  });
 }
 
 async function init() {
@@ -124,6 +142,8 @@ function animate() {
 
   renderImageToCanvas(atlasCtx, state.spritesheet);
   renderMetadataToCanvas(atlasCtx, state);
+  renderHoverToCanvas(atlasCtx, state);
+
   renderLevelToCanvas(levelCtx, state);
   renderHoverToCanvas(levelCtx, state);
 

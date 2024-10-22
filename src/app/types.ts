@@ -2,11 +2,16 @@ type NumberPair = [number, number];
 
 type Vector2 = { x: number; y: number };
 
+type Cursor = {
+  target: HTMLCanvasElement;
+  position: Vector2;
+};
+
 type ApplicationState = {
-  mouse: Vector2;
   spritesheet?: HTMLImageElement;
   metadata?: SpriteAtlas;
   level?: Level;
+  cursor?: Cursor;
 };
 
 type Layer = {

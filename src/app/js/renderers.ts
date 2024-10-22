@@ -118,10 +118,11 @@ function renderHoverToCanvas(
   ctx: CanvasRenderingContext2D,
   state: ApplicationState
 ) {
-  if (!state.metadata || !state.mouse) return;
+  if (!state.metadata || !state.cursor) return;
+  if (state.cursor.target !== ctx.canvas) return;
 
   const { tileWidth, tileHeight } = state.metadata.tilesheet;
-  const { x, y } = state.mouse;
+  const { x, y } = state.cursor.position;
 
   ctx.fillStyle = "rgba(255, 0, 0, 0.25)";
   ctx.beginPath();
