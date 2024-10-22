@@ -1,9 +1,6 @@
 import { ApplicationState } from "../types.js";
-import { divmod } from "./helpers.js";
+import { divmod } from "./utils/math.js";
 
-/**
- * @param {HTMLImageElement} image
- */
 function renderImageToCanvas(
   ctx: CanvasRenderingContext2D,
   image?: HTMLImageElement
@@ -14,10 +11,6 @@ function renderImageToCanvas(
   ctx.drawImage(image, 0, 0);
 }
 
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {ApplicationState} state
- */
 function renderMetadataToCanvas(
   ctx: CanvasRenderingContext2D,
   state: ApplicationState
@@ -45,10 +38,6 @@ function renderMetadataToCanvas(
   });
 }
 
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {ApplicationState} state
- */
 function renderLevelToCanvas(
   ctx: CanvasRenderingContext2D,
   state: ApplicationState

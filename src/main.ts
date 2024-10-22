@@ -1,15 +1,14 @@
 import "./tailwind.css";
 import "./style.css";
 
-import { ApplicationState } from "./app/types.js";
+import type { ApplicationState } from "./app/types.js";
 
+import { clearCanvas } from "./app/js/utils/canvas.js";
+import { getFile, getFormByName } from "./app/js/utils/form.js";
 import {
-  clearCanvas,
-  getFile,
-  getFormByName,
   getRelativeMousePosition,
   getSnappedPosition,
-} from "./app/js/helpers.js";
+} from "./app/js/utils/mouse.js";
 import { loadImage, loadJSON } from "./app/js/loaders.js";
 import { readFileAsImage, readFileAsJSON } from "./app/js/readers.js";
 import {
@@ -107,9 +106,9 @@ function updateAtlas(event: SubmitEvent) {
 async function performUpdate(form: HTMLFormElement) {
   try {
     updateState({
-      level: await updateLevel(getFile(form, "level")),
-      spritesheet: await updateSpritesheet(getFile(form, "spritesheet")),
-      metadata: await updateMetadata(getFile(form, "metadata")),
+      level: await readFileAsJSON(getFile(form, "level")),
+      spritesheet: await readFileAsImage(getFile(form, "spritesheet")),
+      metadata: await readFileAsJSON(getFile(form, "metadata")),
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -129,18 +128,6 @@ function animate() {
   renderHoverToCanvas(levelCtx, state);
 
   requestAnimationFrame(animate); // Continue the loop
-}
-
-async function updateSpritesheet(file: File) {
-  updateState({ spritesheet: await readFileAsImage(file) });
-}
-
-async function updateMetadata(file: File) {
-  updateState({ metadata: await readFileAsJSON(file) });
-}
-
-async function updateLevel(file: File) {
-  updateState({ level: await readFileAsJSON(file) });
 }
 
 function updateState<T>(value: T) {

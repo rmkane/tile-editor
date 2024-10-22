@@ -1,29 +1,4 @@
-import { ApplicationState, NumberPair, Vector2 } from "../types";
-
-/**
- * Returns the quotient and remainder as a tuple.
- */
-function divmod(n: number, m: number): NumberPair {
-  return [Math.floor(n / m), n % m];
-}
-
-function getFormByName(name: string): HTMLFormElement | undefined {
-  const forms = document.forms as unknown as { [key: string]: HTMLFormElement };
-  return forms[name] || undefined;
-}
-
-function clearCanvas(ctx: CanvasRenderingContext2D) {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-}
-
-function getFile(form: HTMLFormElement, name: string) {
-  const fileInput = form.elements.namedItem(name) as HTMLInputElement;
-  const { files } = fileInput;
-  if (!files) {
-    throw new Error(`File is not selected for "${name}" input`);
-  }
-  return files[0];
-}
+import type { ApplicationState, Vector2 } from "../../types";
 
 function getSnappedPosition(mousePosition: Vector2, state: ApplicationState) {
   if (!state.metadata || !state.level) return;
@@ -51,12 +26,4 @@ function getRelativeMousePosition({ target, clientX, clientY }: MouseEvent) {
   const { left, top } = element.getBoundingClientRect();
   return { x: clientX - left, y: clientY - top };
 }
-
-export {
-  clearCanvas,
-  divmod,
-  getFile,
-  getFormByName,
-  getRelativeMousePosition,
-  getSnappedPosition,
-};
+export { getRelativeMousePosition, getSnappedPosition };
