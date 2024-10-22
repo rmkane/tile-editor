@@ -1,5 +1,5 @@
-import { ApplicationState } from "../types.js";
-import { divmod } from "./utils/math.js";
+import { ApplicationState } from "../../types.js";
+import { divmod } from "../utils/math.js";
 
 function renderImageToCanvas(
   ctx: CanvasRenderingContext2D,

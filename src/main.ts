@@ -4,17 +4,17 @@ import "./style.css";
 import type { ApplicationState } from "./app/types.js";
 
 import { clearCanvas } from "./app/js/utils/canvas.js";
+import { downloadAsJSON } from "./app/js/utils/download.js";
 import { getFile, getFormByName } from "./app/js/utils/form.js";
+import { loadImage, loadJSON } from "./app/js/utils/load.js";
 import { getTilePosition } from "./app/js/utils/mouse.js";
-import { loadImage, loadJSON } from "./app/js/loaders.js";
-import { readFileAsImage, readFileAsJSON } from "./app/js/readers.js";
+import { readFileAsImage, readFileAsJSON } from "./app/js/utils/reader.js";
 import {
   renderHoverToCanvas,
   renderImageToCanvas,
   renderLevelToCanvas,
   renderMetadataToCanvas,
-} from "./app/js/renderers.js";
-import { downloadAsJSON } from "./app/js/utils/download.js";
+} from "./app/js/features/renderers.js";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h1>Tile Editor</h1>

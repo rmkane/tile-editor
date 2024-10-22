@@ -1,4 +1,5 @@
 import type { ApplicationState, Vector2 } from "../../types";
+import { snapToGrid } from "./grid";
 
 function getTilePosition(event: MouseEvent, state: ApplicationState) {
   const relativePosition = getRelativeMousePosition(event);
@@ -11,18 +12,15 @@ function getSnappedPosition(mousePosition: Vector2, state: ApplicationState) {
   const { tileWidth, tileHeight } = state.metadata.tilesheet;
   const { rows: levelRows, columns: levelCols } = state.level;
 
-  let col = Math.floor(mousePosition.x / tileWidth); // Find the column
-  let row = Math.floor(mousePosition.y / tileHeight); // Find the row
-
-  // Calculate the top-left corner of the snapped cell
-  let snappedX = col * tileWidth;
-  let snappedY = row * tileHeight;
-
   // Ensure the snap stays within the grid bounds
-  return {
-    x: Math.min(snappedX, (levelCols - 1) * tileWidth),
-    y: Math.min(snappedY, (levelRows - 1) * tileHeight),
-  };
+  return snapToGrid(
+    mousePosition.x,
+    mousePosition.y,
+    tileWidth,
+    tileHeight,
+    levelRows,
+    levelCols
+  );
 }
 
 function getRelativeMousePosition({ target, clientX, clientY }: MouseEvent) {
