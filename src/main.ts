@@ -14,6 +14,7 @@ import {
   renderLevelToCanvas,
   renderMetadataToCanvas,
 } from "./app/js/renderers.js";
+import { downloadAsJSON } from "./app/js/utils/download.js";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h1>Tile Editor</h1>
@@ -41,8 +42,9 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       </form>
       <canvas class="render-atlas"></canvas>
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col justify-center items-center gap-4">
       <canvas class="render-level"></canvas>
+      <button type="button" class="download-level">Download Level</button>
     </div>
   </div>
 `;
@@ -54,6 +56,9 @@ const levelCanvas = document.querySelector<HTMLCanvasElement>(".render-level")!;
 const atlasCtx = atlasCanvas.getContext("2d")!;
 const levelCtx = levelCanvas.getContext("2d")!;
 
+const downloadBtn =
+  document.querySelector<HTMLButtonElement>(".download-level")!;
+
 const state: ApplicationState = {};
 
 atlasCtx.imageSmoothingEnabled = false;
@@ -62,12 +67,19 @@ loadAtlasForm.addEventListener("submit", updateAtlas);
 atlasCanvas.addEventListener("click", selectTile);
 levelCanvas.addEventListener("click", stampTile);
 
+downloadBtn.addEventListener("click", downloadLevel);
+
 document.addEventListener("mouseenter", setCursor);
 document.addEventListener("mouseleave", clearCursor);
 document.addEventListener("mousemove", updateMousePosition);
 
 init();
 animate();
+
+function downloadLevel(_event: MouseEvent) {
+  if (!state.level) return;
+  downloadAsJSON(state.level, `${state.level.name}.json`);
+}
 
 function selectTile(this: HTMLCanvasElement, event: MouseEvent) {
   if (!state.metadata) return;

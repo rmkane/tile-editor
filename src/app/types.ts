@@ -22,6 +22,7 @@ type Layer = {
 };
 
 type Level = {
+  name: string;
   tileset: string;
   rows: number;
   columns: number;
