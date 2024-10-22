@@ -1,9 +1,9 @@
-async function readFileAsImage(file) {
+async function readFileAsImage(file: File) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     const img = new Image();
     reader.onload = () => {
-      img.src = reader.result;
+      img.src = reader.result as string;
     };
     img.onload = () => resolve(img);
     img.onerror = reject;
@@ -12,11 +12,11 @@ async function readFileAsImage(file) {
   });
 }
 
-async function readFileAsJSON(file) {
+async function readFileAsJSON(file: File) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
-      resolve(JSON.parse(reader.result));
+      resolve(JSON.parse(reader.result as string));
     };
     reader.onerror = reject;
     reader.readAsText(file);

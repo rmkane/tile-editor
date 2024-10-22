@@ -1,9 +1,13 @@
+import { ApplicationState } from "../types.js";
 import { divmod } from "./helpers.js";
 
 /**
  * @param {HTMLImageElement} image
  */
-function renderImageToCanvas(ctx, image) {
+function renderImageToCanvas(
+  ctx: CanvasRenderingContext2D,
+  image?: HTMLImageElement
+) {
   if (!image) return;
   ctx.canvas.width = image.width;
   ctx.canvas.height = image.height;
@@ -14,7 +18,10 @@ function renderImageToCanvas(ctx, image) {
  * @param {CanvasRenderingContext2D} ctx
  * @param {ApplicationState} state
  */
-function renderMetadataToCanvas(ctx, state) {
+function renderMetadataToCanvas(
+  ctx: CanvasRenderingContext2D,
+  state: ApplicationState
+) {
   const { metadata } = state;
 
   if (!metadata) return;
@@ -34,7 +41,7 @@ function renderMetadataToCanvas(ctx, state) {
     const cx = x + width / 2;
     const cy = y + height / 2;
 
-    ctx.fillText(index, cx, cy);
+    ctx.fillText(String(index), cx, cy);
   });
 }
 
@@ -42,11 +49,14 @@ function renderMetadataToCanvas(ctx, state) {
  * @param {CanvasRenderingContext2D} ctx
  * @param {ApplicationState} state
  */
-function renderLevelToCanvas(ctx, state) {
-  if (!state.metadata || !state.level) return;
+function renderLevelToCanvas(
+  ctx: CanvasRenderingContext2D,
+  state: ApplicationState
+) {
+  if (!state.metadata || !state.level || !state.spritesheet) return;
 
   const { tileWidth, tileHeight } = state.metadata.tilesheet;
-  const { rows: sheetRows, columns: sheetCols } = state.metadata.tilesheet;
+  const { rows: _sheetRows, columns: sheetCols } = state.metadata.tilesheet;
   const { rows: levelRows, columns: levelCols, layers } = state.level;
 
   const levelWidth = levelCols * tileWidth;
@@ -90,7 +100,17 @@ function renderLevelToCanvas(ctx, state) {
   });
 }
 
-function renderGridToCanvas(ctx, { rows, cols, tileWidth, tileHeight }) {
+type GridProps = {
+  rows: number;
+  cols: number;
+  tileWidth: number;
+  tileHeight: number;
+};
+
+function renderGridToCanvas(
+  ctx: CanvasRenderingContext2D,
+  { rows, cols, tileWidth, tileHeight }: GridProps
+) {
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     for (let colIndex = 0; colIndex < cols; colIndex++) {
       ctx.beginPath();
@@ -105,7 +125,10 @@ function renderGridToCanvas(ctx, { rows, cols, tileWidth, tileHeight }) {
   }
 }
 
-function renderHoverToCanvas(ctx, state) {
+function renderHoverToCanvas(
+  ctx: CanvasRenderingContext2D,
+  state: ApplicationState
+) {
   if (!state.metadata || !state.mouse) return;
 
   const { tileWidth, tileHeight } = state.metadata.tilesheet;

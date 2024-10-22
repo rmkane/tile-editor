@@ -1,23 +1,31 @@
+import { ApplicationState, NumberPair, Vector2 } from "../types";
+
 /**
  * Returns the quotient and remainder as a tuple.
- *
- * @param {number} n
- * @param {number} m
- * @returns {number[]}
  */
-function divmod(n, m) {
+function divmod(n: number, m: number): NumberPair {
   return [Math.floor(n / m), n % m];
 }
 
-function clearCanvas(ctx) {
+function getFormByName(name: string): HTMLFormElement | undefined {
+  const forms = document.forms as unknown as { [key: string]: HTMLFormElement };
+  return forms[name] || undefined;
+}
+
+function clearCanvas(ctx: CanvasRenderingContext2D) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
-function getFile(form, name) {
-  return form.elements[name].files[0];
+function getFile(form: HTMLFormElement, name: string) {
+  const fileInput = form.elements.namedItem(name) as HTMLInputElement;
+  const { files } = fileInput;
+  if (!files) {
+    throw new Error(`File is not selected for "${name}" input`);
+  }
+  return files[0];
 }
 
-function getSnappedPosition(mousePosition, state) {
+function getSnappedPosition(mousePosition: Vector2, state: ApplicationState) {
   if (!state.metadata || !state.level) return;
 
   const { tileWidth, tileHeight } = state.metadata.tilesheet;
@@ -37,8 +45,10 @@ function getSnappedPosition(mousePosition, state) {
   };
 }
 
-function getRelativeMousePosition({ target, clientX, clientY }) {
-  const { left, top } = event.target.getBoundingClientRect();
+function getRelativeMousePosition({ target, clientX, clientY }: MouseEvent) {
+  if (!target) return { x: 0, y: 0 };
+  const element = target as HTMLElement;
+  const { left, top } = element.getBoundingClientRect();
   return { x: clientX - left, y: clientY - top };
 }
 
@@ -46,6 +56,7 @@ export {
   clearCanvas,
   divmod,
   getFile,
+  getFormByName,
   getRelativeMousePosition,
   getSnappedPosition,
 };
