@@ -5,10 +5,7 @@ import type { ApplicationState } from "./app/types.js";
 
 import { clearCanvas } from "./app/js/utils/canvas.js";
 import { getFile, getFormByName } from "./app/js/utils/form.js";
-import {
-  getRelativeMousePosition,
-  getSnappedPosition,
-} from "./app/js/utils/mouse.js";
+import { getTilePosition } from "./app/js/utils/mouse.js";
 import { loadImage, loadJSON } from "./app/js/loaders.js";
 import { readFileAsImage, readFileAsJSON } from "./app/js/readers.js";
 import {
@@ -62,12 +59,40 @@ const state: ApplicationState = {};
 atlasCtx.imageSmoothingEnabled = false;
 loadAtlasForm.addEventListener("submit", updateAtlas);
 
+atlasCanvas.addEventListener("click", selectTile);
+levelCanvas.addEventListener("click", stampTile);
+
 document.addEventListener("mouseenter", setCursor);
 document.addEventListener("mouseleave", clearCursor);
 document.addEventListener("mousemove", updateMousePosition);
 
 init();
 animate();
+
+function selectTile(this: HTMLCanvasElement, event: MouseEvent) {
+  if (!state.metadata) return;
+  const position = getTilePosition(event, state);
+  if (!position) return;
+  const { columns, tileHeight, tileWidth } = state.metadata.tilesheet;
+  const { x, y } = position;
+  const row = Math.floor(y / tileWidth);
+  const column = Math.floor(x / tileHeight);
+  const tileIndex = row * columns + column;
+  updateState({ selectedTileIndex: tileIndex });
+}
+
+function stampTile(this: HTMLCanvasElement, event: MouseEvent) {
+  if (!state.metadata || !state.level || state.selectedTileIndex == null)
+    return;
+  const position = getTilePosition(event, state);
+  if (!position) return;
+  const { tileHeight, tileWidth } = state.metadata.tilesheet;
+  const { x, y } = position;
+  const row = Math.floor(y / tileWidth);
+  const column = Math.floor(x / tileHeight);
+
+  state.level.layers[0].data[row][column] = state.selectedTileIndex;
+}
 
 function setCursor(event: MouseEvent) {
   if (!(event.target instanceof HTMLCanvasElement)) return;
@@ -88,13 +113,11 @@ function clearCursor(event: MouseEvent) {
 function updateMousePosition(event: MouseEvent) {
   if (!(event.target instanceof HTMLCanvasElement)) return;
   const canvas: HTMLCanvasElement = event.target;
-  const relativePosition = getRelativeMousePosition(event);
-  const snappedPosition = getSnappedPosition(relativePosition, state);
 
   updateState({
     cursor: {
       target: canvas,
-      position: snappedPosition,
+      position: getTilePosition(event, state),
     },
   });
 }

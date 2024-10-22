@@ -1,5 +1,10 @@
 import type { ApplicationState, Vector2 } from "../../types";
 
+function getTilePosition(event: MouseEvent, state: ApplicationState) {
+  const relativePosition = getRelativeMousePosition(event);
+  return getSnappedPosition(relativePosition, state);
+}
+
 function getSnappedPosition(mousePosition: Vector2, state: ApplicationState) {
   if (!state.metadata || !state.level) return;
 
@@ -26,4 +31,4 @@ function getRelativeMousePosition({ target, clientX, clientY }: MouseEvent) {
   const { left, top } = element.getBoundingClientRect();
   return { x: clientX - left, y: clientY - top };
 }
-export { getRelativeMousePosition, getSnappedPosition };
+export { getRelativeMousePosition, getSnappedPosition, getTilePosition };

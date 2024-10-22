@@ -118,7 +118,7 @@ function renderHoverToCanvas(
   ctx: CanvasRenderingContext2D,
   state: ApplicationState
 ) {
-  if (!state.metadata || !state.cursor) return;
+  if (!state.metadata || !state.cursor?.position) return;
   if (state.cursor.target !== ctx.canvas) return;
 
   const { tileWidth, tileHeight } = state.metadata.tilesheet;

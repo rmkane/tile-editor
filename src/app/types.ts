@@ -12,6 +12,7 @@ type ApplicationState = {
   metadata?: SpriteAtlas;
   level?: Level;
   cursor?: Cursor;
+  selectedTileIndex?: number;
 };
 
 type Layer = {
