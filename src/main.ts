@@ -7,7 +7,10 @@ import { clearCanvas } from "./app/js/utils/canvas.js";
 import { downloadAsJSON } from "./app/js/utils/download.js";
 import { getFile, getFormByName } from "./app/js/utils/form.js";
 import { loadImage, loadJSON } from "./app/js/utils/load.js";
-import { getTilePosition } from "./app/js/utils/mouse.js";
+import {
+  getGridPositionFromClick,
+  getTilePositionFromClick,
+} from "./app/js/utils/mouse.js";
 import { readFileAsImage, readFileAsJSON } from "./app/js/utils/reader.js";
 import {
   renderHoverToCanvas,
@@ -15,6 +18,7 @@ import {
   renderLevelToCanvas,
   renderMetadataToCanvas,
 } from "./app/js/features/renderers.js";
+import { gridPositionToIndex } from "./app/js/utils/grid.js";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h1>Tile Editor</h1>
@@ -73,6 +77,19 @@ document.addEventListener("mouseenter", setCursor);
 document.addEventListener("mouseleave", clearCursor);
 document.addEventListener("mousemove", updateMousePosition);
 
+atlasCanvas.addEventListener("mousedown", onDragStart);
+atlasCanvas.addEventListener("mouseup", onDragEnd);
+
+function onDragStart(event: MouseEvent) {
+  const position = getTilePositionFromClick(event, state);
+  console.log(position);
+}
+
+function onDragEnd(event: MouseEvent) {
+  const position = getTilePositionFromClick(event, state);
+  console.log(position);
+}
+
 init();
 animate();
 
@@ -83,26 +100,20 @@ function downloadLevel(_event: MouseEvent) {
 
 function selectTile(this: HTMLCanvasElement, event: MouseEvent) {
   if (!state.metadata) return;
-  const position = getTilePosition(event, state);
-  if (!position) return;
-  const { columns, tileHeight, tileWidth } = state.metadata.tilesheet;
-  const { x, y } = position;
-  const row = Math.floor(y / tileWidth);
-  const column = Math.floor(x / tileHeight);
-  const tileIndex = row * columns + column;
+  const gridPosition = getGridPositionFromClick(event, state);
+  if (!gridPosition) return;
+  const { columns } = state.metadata.tilesheet;
+  const { row, column } = gridPosition;
+  const tileIndex = gridPositionToIndex(row, column, columns);
   updateState({ selectedTileIndex: tileIndex });
 }
 
 function stampTile(this: HTMLCanvasElement, event: MouseEvent) {
   if (!state.metadata || !state.level || state.selectedTileIndex == null)
     return;
-  const position = getTilePosition(event, state);
-  if (!position) return;
-  const { tileHeight, tileWidth } = state.metadata.tilesheet;
-  const { x, y } = position;
-  const row = Math.floor(y / tileWidth);
-  const column = Math.floor(x / tileHeight);
-
+  const gridPosition = getGridPositionFromClick(event, state);
+  if (!gridPosition) return;
+  const { row, column } = gridPosition;
   state.level.layers[0].data[row][column] = state.selectedTileIndex;
 }
 
@@ -129,7 +140,7 @@ function updateMousePosition(event: MouseEvent) {
   updateState({
     cursor: {
       target: canvas,
-      position: getTilePosition(event, state),
+      position: getTilePositionFromClick(event, state),
     },
   });
 }

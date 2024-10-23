@@ -1,9 +1,27 @@
 import type { ApplicationState, Vector2 } from "../../types";
 import { snapToGrid } from "./grid";
 
-function getTilePosition(event: MouseEvent, state: ApplicationState) {
+function getTilePositionFromClick(event: MouseEvent, state: ApplicationState) {
   const relativePosition = getRelativeMousePosition(event);
   return getSnappedPosition(relativePosition, state);
+}
+
+function getGridPositionFromClick(event: MouseEvent, state: ApplicationState) {
+  const tilePosition = getTilePositionFromClick(event, state);
+  return tilePosition && getGridPositionFromTilePosition(tilePosition, state);
+}
+
+function getGridPositionFromTilePosition(
+  position: Vector2,
+  state: ApplicationState
+) {
+  if (!position || !state.metadata) return;
+  const { tileHeight, tileWidth } = state.metadata.tilesheet;
+  const { x, y } = position;
+  return {
+    row: Math.floor(y / tileWidth),
+    column: Math.floor(x / tileHeight),
+  };
 }
 
 function getSnappedPosition(mousePosition: Vector2, state: ApplicationState) {
@@ -29,4 +47,10 @@ function getRelativeMousePosition({ target, clientX, clientY }: MouseEvent) {
   const { left, top } = element.getBoundingClientRect();
   return { x: clientX - left, y: clientY - top };
 }
-export { getRelativeMousePosition, getSnappedPosition, getTilePosition };
+
+export {
+  getGridPositionFromClick,
+  getRelativeMousePosition,
+  getSnappedPosition,
+  getTilePositionFromClick,
+};

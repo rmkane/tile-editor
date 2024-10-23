@@ -1,3 +1,18 @@
+import { divmod } from "./math";
+
+function gridPositionToIndex(
+  rowIndex: number,
+  columnIndex: number,
+  columns: number
+) {
+  return rowIndex * columns + columnIndex;
+}
+
+function gridIndexToPosition(index: number, columns: number) {
+  const [row, column] = divmod(index, columns);
+  return { row, column };
+}
+
 function getGridCoordinates(
   x: number,
   y: number,
@@ -30,12 +45,14 @@ function clampPosition(
   rows: number,
   cols: number
 ) {
-  const maxX = (cols - 1) * tileWidth;
-  const maxY = (rows - 1) * tileHeight;
   return {
-    x: Math.min(x, maxX),
-    y: Math.min(y, maxY),
+    x: clampValue(x, 0, (cols - 1) * tileWidth),
+    y: clampValue(y, 0, (rows - 1) * tileHeight),
   };
+}
+
+function clampValue(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function snapToGrid(
@@ -56,4 +73,4 @@ function snapToGrid(
   return clampPosition(snappedX, snappedY, tileWidth, tileHeight, rows, cols);
 }
 
-export { snapToGrid };
+export { gridIndexToPosition, gridPositionToIndex, snapToGrid };
