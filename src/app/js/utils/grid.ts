@@ -1,4 +1,14 @@
+import { Vector2 } from "../../types";
 import { divmod } from "./math";
+
+function getBounds(points: Vector2[]): [Vector2, Vector2] {
+  const xValues = points.map((p) => p.x);
+  const yValues = points.map((p) => p.y);
+  return [
+    { x: Math.min(...xValues), y: Math.min(...yValues) },
+    { x: Math.max(...xValues), y: Math.max(...yValues) },
+  ];
+}
 
 function gridPositionToIndex(
   rowIndex: number,
@@ -73,4 +83,4 @@ function snapToGrid(
   return clampPosition(snappedX, snappedY, tileWidth, tileHeight, rows, cols);
 }
 
-export { gridIndexToPosition, gridPositionToIndex, snapToGrid };
+export { getBounds, gridIndexToPosition, gridPositionToIndex, snapToGrid };

@@ -2,6 +2,8 @@ type NumberPair = [number, number];
 
 type Vector2 = { x: number; y: number };
 
+type Cell = { row: number; column: number };
+
 type Cursor = {
   target: HTMLCanvasElement;
   position: Vector2;
@@ -13,6 +15,9 @@ type ApplicationState = {
   level?: Level;
   cursor?: Cursor;
   selectedTileIndex?: number;
+  dragStartPosition?: Cell;
+  dragEndPosition?: Cell;
+  selectedCells?: Cell[];
 };
 
 type Layer = {
@@ -45,6 +50,9 @@ type Tilesheet = {
 type Tile = {
   id: string;
   name: string;
+} & Entity;
+
+type Entity = {
   x: number;
   y: number;
   width: number;
@@ -53,6 +61,8 @@ type Tile = {
 
 export type {
   ApplicationState,
+  Cell,
+  Entity,
   Layer,
   Level,
   NumberPair,

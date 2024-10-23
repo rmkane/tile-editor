@@ -1,4 +1,5 @@
 import { ApplicationState } from "../../types.js";
+import { cellToHighlight } from "../utils/mapper.js";
 import { divmod } from "../utils/math.js";
 
 function renderImageToCanvas(
@@ -35,6 +36,26 @@ function renderMetadataToCanvas(
     const cy = y + height / 2;
 
     ctx.fillText(String(index), cx, cy);
+  });
+}
+
+function renderHighlightsToCanvas(
+  ctx: CanvasRenderingContext2D,
+  state: ApplicationState
+) {
+  if (!state.selectedCells) return;
+
+  const color = "rgba(0, 0, 255, 0.5)";
+
+  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+  ctx.font = "bold 24px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  state.selectedCells.forEach((cell) => {
+    const { x, y, width, height } = cellToHighlight(cell, state);
+    ctx.fillRect(x, y, width, height);
   });
 }
 
@@ -131,6 +152,7 @@ function renderHoverToCanvas(
 }
 
 export {
+  renderHighlightsToCanvas,
   renderHoverToCanvas,
   renderImageToCanvas,
   renderLevelToCanvas,
