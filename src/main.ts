@@ -21,6 +21,7 @@ import {
 } from "./app/js/features/renderers.js";
 import { getBounds, gridPositionToIndex } from "./app/js/utils/grid.js";
 import { cellToVector } from "./app/js/utils/mapper.js";
+import { measureSelection } from "./app/js/utils/math.js";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h1>Tile Editor</h1>
@@ -96,13 +97,6 @@ function onDragEnd(event: MouseEvent) {
     updateSelection();
   }
 
-  const gridPosition = getGridPositionFromClick(event, state);
-  if (!gridPosition) return;
-  const { columns } = state.metadata.tilesheet;
-  const { row, column } = gridPosition;
-  const tileIndex = gridPositionToIndex(row, column, columns);
-  updateState({ selectedTileIndex: tileIndex });
-
   state.dragStartPosition = undefined; // clear
   state.dragEndPosition = undefined; // clear
 }
@@ -145,12 +139,35 @@ function downloadLevel(_event: MouseEvent) {
 
 // TODO: Convert selection to a matrix of indices and stamp those
 function stampTile(this: HTMLCanvasElement, event: MouseEvent) {
-  if (!state.metadata || !state.level || state.selectedTileIndex == null)
-    return;
+  if (!state.metadata || !state.level || !state.selectedCells?.length) return;
   const gridPosition = getGridPositionFromClick(event, state);
   if (!gridPosition) return;
   const { row, column } = gridPosition;
-  state.level.layers[0].data[row][column] = state.selectedTileIndex;
+  const matrix = getSelectedTileIndices();
+  for (let rowIndex = 0; rowIndex < matrix.length; rowIndex++) {
+    for (let colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+      const dRow = row + rowIndex;
+      const dCol = column + colIndex;
+      state.level.layers[0].data[dRow][dCol] = matrix[rowIndex][colIndex];
+    }
+  }
+}
+
+function getSelectedTileIndices() {
+  if (!state.selectedCells || !state.metadata) return [];
+  const { columns: sourceColumns } = state.metadata.tilesheet;
+  const { rows, columns } = measureSelection(state.selectedCells);
+  const indexMatrix: number[][] = [];
+  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+    indexMatrix.push([]);
+    for (let colIndex = 0; colIndex < columns; colIndex++) {
+      const i = gridPositionToIndex(rowIndex, colIndex, columns);
+      const { row, column } = state.selectedCells[i];
+      const tileIndex = gridPositionToIndex(row, column, sourceColumns);
+      indexMatrix[rowIndex].push(tileIndex);
+    }
+  }
+  return indexMatrix;
 }
 
 function setCursor(event: MouseEvent) {

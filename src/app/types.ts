@@ -14,7 +14,6 @@ type ApplicationState = {
   metadata?: SpriteAtlas;
   level?: Level;
   cursor?: Cursor;
-  selectedTileIndex?: number;
   dragStartPosition?: Cell;
   dragEndPosition?: Cell;
   selectedCells?: Cell[];
