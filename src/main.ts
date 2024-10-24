@@ -97,26 +97,33 @@ function onDragStart(event: MouseEvent) {
   state.dragStartPosition = getGridPositionFromClick(event, state);
 }
 
+function cellsEqual(left?: Cell, right?: Cell) {
+  if (!left && !right) return true;
+  if (!left || !right) return false;
+  return left.column === right.column && left.row === right.row;
+}
+
+function isAlreadySelected() {
+  return (
+    state.selectedCells?.length === 1 &&
+    cellsEqual(state.selectedCells[0], state.dragStartPosition) &&
+    cellsEqual(state.dragStartPosition, state.dragEndPosition)
+  );
+}
+
 function onDragEnd(event: MouseEvent) {
   if (!state.metadata) return;
 
-  if (!state.dragEndPosition) {
-    state.dragEndPosition = getGridPositionFromClick(event, state);
+  state.dragEndPosition = getGridPositionFromClick(event, state);
+
+  if (isAlreadySelected()) {
+    state.selectedCells = [];
+  } else {
     updateSelection();
   }
 
   state.dragStartPosition = undefined; // clear
   state.dragEndPosition = undefined; // clear
-}
-
-function updateSelection() {
-  if (!state.dragStartPosition || !state.dragEndPosition) return;
-  const bounds = getBounds([
-    cellToVector(state.dragStartPosition),
-    cellToVector(state.dragEndPosition),
-  ]);
-
-  state.selectedCells = computeSelection(bounds);
 }
 
 function onDrag(event: MouseEvent) {
@@ -127,9 +134,18 @@ function onDrag(event: MouseEvent) {
     },
   });
 
-  if (!state.dragStartPosition) return;
   state.dragEndPosition = getGridPositionFromClick(event, state);
   updateSelection();
+}
+
+function updateSelection() {
+  if (!state.dragStartPosition || !state.dragEndPosition) return;
+  const bounds = getBounds([
+    cellToVector(state.dragStartPosition),
+    cellToVector(state.dragEndPosition),
+  ]);
+
+  state.selectedCells = computeSelection(bounds);
 }
 
 function computeSelection([tl, br]: Vector2[]) {
