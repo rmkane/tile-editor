@@ -1,7 +1,13 @@
 import "./tailwind.css";
 import "./style.css";
 
-import type { ApplicationState, Cell, Entity, Vector2 } from "./app/types.js";
+import type {
+  ApplicationState,
+  Cell,
+  Level,
+  SpriteAtlas,
+  Vector2,
+} from "./app/types.js";
 
 import { clearCanvas } from "./app/js/utils/canvas.js";
 import { downloadAsJSON } from "./app/js/utils/download.js";
@@ -116,8 +122,8 @@ function updateSelection() {
 function onDrag(event: MouseEvent) {
   updateState({
     cursor: {
-      target: event.target,
-      position: getTilePositionFromClick(event, state),
+      target: event.target as HTMLCanvasElement,
+      position: getTilePositionFromClick(event, state)!,
     },
   });
 
@@ -174,7 +180,7 @@ function setCursor(event: MouseEvent) {
 
 function clearCursor(event: MouseEvent) {
   if (!(event.target instanceof HTMLCanvasElement)) return;
-  updateState({ cursor: null });
+  updateState({ cursor: undefined });
 }
 
 function updateMousePosition(event: MouseEvent) {
@@ -184,7 +190,7 @@ function updateMousePosition(event: MouseEvent) {
   updateState({
     cursor: {
       target: canvas,
-      position: getTilePositionFromClick(event, state),
+      position: getTilePositionFromClick(event, state)!,
     },
   });
 }
@@ -194,7 +200,7 @@ async function init() {
 }
 
 async function loadLevel(path: string) {
-  const level = await loadJSON(path);
+  const level = await loadJSON<Level>(path);
   const { tileset } = level;
   updateState({
     level,
@@ -214,9 +220,9 @@ function updateAtlas(event: SubmitEvent) {
 async function performUpdate(form: HTMLFormElement) {
   try {
     updateState({
-      level: await readFileAsJSON(getFile(form, "level")),
+      level: await readFileAsJSON<Level>(getFile(form, "level")),
       spritesheet: await readFileAsImage(getFile(form, "spritesheet")),
-      metadata: await readFileAsJSON(getFile(form, "metadata")),
+      metadata: await readFileAsJSON<SpriteAtlas>(getFile(form, "metadata")),
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -242,6 +248,6 @@ function animate() {
   requestAnimationFrame(animate); // Continue the loop
 }
 
-function updateState<T>(value: T) {
-  Object.assign(state, value);
+function updateState(updatedState: ApplicationState) {
+  Object.assign(state, updatedState);
 }
