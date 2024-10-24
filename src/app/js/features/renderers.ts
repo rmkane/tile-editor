@@ -1,6 +1,7 @@
 import { ApplicationState } from "../../types.js";
+import { gridPositionToIndex } from "../utils/grid.js";
 import { cellToHighlight } from "../utils/mapper.js";
-import { divmod } from "../utils/math.js";
+import { divmod, measureSelection } from "../utils/math.js";
 
 function renderImageToCanvas(
   ctx: CanvasRenderingContext2D,
@@ -45,7 +46,8 @@ function renderHighlightsToCanvas(
 ) {
   if (!state.selectedCells) return;
 
-  const color = "rgba(0, 0, 255, 0.5)";
+  const opacity = state.dragStartPosition ? 0.2 : 0.4;
+  const color = `rgba(0, 0, 255, ${opacity})`;
 
   ctx.fillStyle = color;
   ctx.strokeStyle = color;
@@ -135,10 +137,57 @@ function renderGridToCanvas(
   }
 }
 
+function renderGhostToCanvas(
+  ctx: CanvasRenderingContext2D,
+  state: ApplicationState
+) {
+  if (
+    !state.selectedCells ||
+    !state.spritesheet ||
+    !state.metadata ||
+    !state.cursor?.position ||
+    state.cursor?.target !== ctx.canvas
+  )
+    return;
+
+  ctx.save();
+  ctx.globalAlpha = 0.5;
+
+  const { tileWidth, tileHeight } = state.metadata.tilesheet;
+  const { rows, columns } = measureSelection(state.selectedCells);
+  const { x, y } = state.cursor.position;
+
+  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+    for (let colIndex = 0; colIndex < columns; colIndex++) {
+      const i = gridPositionToIndex(rowIndex, colIndex, columns);
+      const { row, column } = state.selectedCells[i];
+
+      ctx.drawImage(
+        state.spritesheet,
+        column * tileWidth,
+        row * tileHeight,
+        tileWidth,
+        tileHeight,
+        x + colIndex * tileWidth,
+        y + rowIndex * tileHeight,
+        tileWidth,
+        tileHeight
+      );
+    }
+  }
+
+  ctx.restore();
+
+  ctx.strokeStyle = "rgba(255, 255, 0, 1.0)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, tileWidth * columns, tileHeight * rows);
+}
+
 function renderHoverToCanvas(
   ctx: CanvasRenderingContext2D,
   state: ApplicationState
 ) {
+  if (state.selectedCells?.length) return;
   if (!state.metadata || !state.cursor?.position) return;
   if (state.cursor.target !== ctx.canvas) return;
 
@@ -152,6 +201,7 @@ function renderHoverToCanvas(
 }
 
 export {
+  renderGhostToCanvas,
   renderHighlightsToCanvas,
   renderHoverToCanvas,
   renderImageToCanvas,
